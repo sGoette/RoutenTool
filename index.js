@@ -16,7 +16,8 @@ const server = http.createServer((req, res) => {
         sendFile(res, __dirname + req.url);
       }
       else {
-        sendFile(res, __dirname + "/public/" + req.url);
+        console.log(req.url);
+        sendFile(res, __dirname + "/public" + req.url);
       }
   }
 });
@@ -26,6 +27,9 @@ io = require('socket.io')(server);
 io.on('connection', socket => {
   socket.on('loadTracks', (data) => {
     if(data == "init") {
+      if(!fs.existsSync(__dirname + "/data/")) {
+        fs.mkdirSync(__dirname + "/data/");
+      }
       var tracks = [];
       fs.readdir(__dirname + "/data/", {withFileTypes: true}, (err, files) => {
         if (err) {
