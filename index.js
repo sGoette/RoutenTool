@@ -13,11 +13,10 @@ const server = http.createServer((req, res) => {
       break;
     default:
       if(req.url.indexOf("/data/") != -1) {
-        sendFile(res, __dirname + req.url);
+        sendFile(res, __dirname + decodeURI(req.url));
       }
       else {
-        console.log(req.url);
-        sendFile(res, __dirname + "/public" + req.url);
+        sendFile(res, __dirname + "/public/" + req.url);
       }
   }
 });

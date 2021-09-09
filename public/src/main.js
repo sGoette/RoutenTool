@@ -81,7 +81,7 @@ socket.on('trackList', (tracks) => {
   tracks.forEach((track) => {
     const newTrack = new ol.layer.Vector({
       source: new ol.source.Vector({
-        url: track,
+        url: encodeURI(track),
         format: new ol.format.GPX(),
       }),
       style: new ol.style.Style({
