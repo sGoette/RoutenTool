@@ -1,64 +1,87 @@
-const http = require('http');
-const fs = require('fs');
-var io;
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron')
+const path = require('path')
+const fs = require('fs')
+var mainWindow
 
-const hostname = 'localhost';
-const port = 3000;
-
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  switch (req.url) {
-    case "/":
-      sendFile(res, __dirname + "/public/index.html");
-      break;
-    default:
-      if(req.url.indexOf("/data/") != -1) {
-        sendFile(res, __dirname + decodeURI(req.url));
-      }
-      else {
-        sendFile(res, __dirname + "/public/" + req.url);
-      }
-  }
-});
-
-io = require('socket.io')(server);
-
-io.on('connection', socket => {
-  socket.on('loadTracks', (data) => {
-    if(data == "init") {
-      if(!fs.existsSync(__dirname + "/data/")) {
-        fs.mkdirSync(__dirname + "/data/");
-      }
-      var tracks = [];
-      fs.readdir(__dirname + "/data/", {withFileTypes: true}, (err, files) => {
-        if (err) {
-          console.log(err);
-        }
-        else {
-          files.forEach((file) => {
-            if(file.isFile() && file.name.indexOf(".gpx") >= 0) {
-              tracks.push("data/" + file.name);
-            }
-          });
-          io.emit("trackList", tracks);
-        }
-      });
+app.whenReady().then(() => {
+  mainWindow = new BrowserWindow({
+    width: 1920,
+    height: 1080,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js')
     }
-  });
-});
+  })
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
+  mainWindow.loadFile('public/index.html')
 
-function sendFile(res, url) {
-  fs.readFile(url, function (err,data) {
-    if (err) {
-      res.writeHead(404);
-      res.end(JSON.stringify(err));
+  ipcMain.on('toMain', (event, args) => {
+    if(args.action == "load files from folder") {
+      readFolder(args.folder)
+    }
+  })
+})
+
+app.on('activate', function () {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow()
+})
+
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
+})
+
+const isMac = process.platform === 'darwin'
+
+const template = [
+  isMac ? { role: 'appMenu' } : {},
+  {
+    label: 'File',
+    submenu: [
+      {
+        label: 'Open Folder...',
+        accelerator: 'CmdOrCtrl+O',
+        click: () => {
+          getFolder();
+        }
+      },
+      isMac ? { role: 'close' } : { role: 'quit' }
+    ]
+  },
+  { role: 'editMenu' },
+  { role: 'viewMenu' },
+  { role: 'windowMenu' }
+]
+
+const menu = Menu.buildFromTemplate(template)
+Menu.setApplicationMenu(menu)
+
+function getFolder() {
+  dialog.showOpenDialog(mainWindow, {
+    title: "Ordner mit GPX Dateien auswählen",
+    properties: ['openDirectory']
+  }).then(result => {
+    if(result.canceled) {
+      console.log("No folder selected");
       return;
     }
-    res.writeHead(200);
-    res.end(data);
+    mainWindow.webContents.send("fromMain", {action: "set folder to local storage", folder: result.filePaths[0]})
+    readFolder(result.filePaths[0])
+  });
+}
+
+function readFolder(folder) {
+  var tracks = []
+  fs.readdir(folder, {withFileTypes: true}, (err, files) => {
+    if (err) {
+      console.log(err)
+      return
+    }
+    else {
+      files.forEach((file) => {
+        if(file.isFile() && file.name.indexOf(".gpx") >= 0) {
+          tracks.push(folder + "/" + file.name)
+        }
+      });
+      mainWindow.webContents.send("fromMain", {action: "send tracks", tracks: tracks})
+    }
   });
 }

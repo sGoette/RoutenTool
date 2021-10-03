@@ -1,10 +1,13 @@
 {
-  "name": "routentool",
+  "name": "GPX Routen Bibliothek",
   "version": "1.0.0",
-  "description": "",
+  "description": "Einfache Anwendung, um GPX Routen auf Swiss Topo Karten darzustellen. Es können mehrere Routen geladen und individuell ein- und ausgeblendet werden. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "electron .",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=builds",
+    "package-win": "electron-packager . --overwrite --asar --platform=win32 --arch=ia32 --prune=true --out=builds",
+    "package-linux": "electron-packager . --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/png/1024x1024.png --prune=true --out=builds"
   },
   "repository": {
     "type": "git",
@@ -16,7 +19,13 @@
     "url": "https://github.com/sGoette/RoutenTool/issues"
   },
   "homepage": "https://github.com/sGoette/RoutenTool#readme",
+  "devDependencies": {
+    "electron": "^15.0.0",
+    "electron-packager": "^15.4.0"
+  },
   "dependencies": {
-    "socket.io": "^4.2.0"
+    "electron-squirrel-startup": "^1.0.0"
+  },
+  "config": {
   }
 }

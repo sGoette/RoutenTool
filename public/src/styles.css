@@ -1,6 +1,11 @@
+html {
+  font-size: 16px;
+}
 body {
   font-family: sans-serif;
-  background-color: #444444;
+  background: #00d2ff;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #928DAB, #00d2ff);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #928DAB, #00d2ff); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
 #map {
   position: absolute;
@@ -9,30 +14,71 @@ body {
   top: 0;
   left: 0;
 }
+.uiBox, .ol-zoom-in, .ol-zoom-out {
+  position: absolute;
+  background: #e96443;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #904e95, #e96443);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #904e95, #e96443); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  width: 13rem;
+  border: none;
+  color: white;
+  font-size: 0.9em;
+  font-weight: light;
+  text-decoration: none;
+  padding: 0.2rem;
+  border-radius: 0.65rem;
+  opacity: 0.8;
+  transition: 0.5s;
+}
+.uiBox:hover , .ol-zoom-in:hover, .ol-zoom-out:hover{
+  opacity: 1;
+}
+.uiBox item {
+  padding: 0.3rem;
+  margin: 0.4rem;
+  cursor: pointer;
+  display: block;
+  border-radius: 0.25rem;
+  background: #000000;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.2));  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.2)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  /*box-shadow: 0.2rem 0.2rem 0.8rem rgba(0,0,0,0.6); */
+  transition: 0.5s;
+}
+.uiBox item:hover {
+  background: #000000;
+  background: -webkit-linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3));  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.3)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.uiBox item.active {
+  box-shadow: 0.2rem 0.2rem 0.8rem rgba(0,0,0,0.6);
+
+}
+#layerSelector {
+  top: 2rem;
+  left: 2rem;
+}
+#tracksContainer {
+  bottom: 2rem;
+  left: 2rem;
+}
 .ol-control button {
+  position: relative !important;
   display: block;
   margin: 0.2rem;
-  padding: 0;
-  color: #676767;
   font-size: 1.4em;
-  font-weight: bold;
   text-decoration: none;
   text-align: center;
   height: 1.375em;
   width: 1.375em;
   line-height: .4em;
-  background-color: rgba(255,255,255,0.3);
-  border: solid 1px #676767;
-}
-.ol-control button:hover, .ol-control button:focus {
-  text-decoration: none;
-  background-color: rgba(255,255,255,1);
+  cursor: pointer;
 }
 .ol-zoom-out {
-  border-radius:2px 2px 4px 4px;
+  border-radius:0.4rem 0.4rem 50% 50%;
 }
 .ol-zoom-in {
-  border-radius: 4px 4px 2px 2px;
+  border-radius: 50% 50% 0.4rem 0.4rem;
 }
 .ol-rotate {
   display: none;
@@ -46,10 +92,10 @@ body {
   position: absolute;
   bottom: 0.5rem;
   right: 2rem;
+  background-color: rgba(255,255,255,0.75);
 }
 .ol-scale-line-inner {
-  border-bottom: solid 1px #676767;
-  border-left: solid 1px #676767;
-  border-right: solid 1px #676767;
+  border-left: solid 2px #000000;
+  border-right: solid 2px #000000;
   text-align: center;
 }
