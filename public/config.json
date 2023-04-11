@@ -25,6 +25,11 @@
       "url": "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg",
       "id": "Landeskarte Grau",
       "default": false
+    },
+    {
+      "url": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "id": "OSM",
+      "default": false
     }
   ],
   "center": [830151.6269972717, 5934365.718957167],
